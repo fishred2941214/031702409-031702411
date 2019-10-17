@@ -1,0 +1,195 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>学术家族树</title>
+    <script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"> </script>
+    <script src="./vakata-jstree-c9d7c14/dist/jstree.min.js"></script>
+    <link href="tree.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="./vakata-jstree-c9d7c14/dist/themes/default/style.min.css"/>
+  </head>
+  <body>
+      <div id = "input">
+          <img  id = "logo" src = TREE.png alt = "标题">    
+          <div id = "textarea">
+          
+          <p>
+            <textarea id = "original_tree" placeholder="请输入一或多组学术家族树..."></textarea>
+          </p>
+          <p>
+            <button id = "confirm_button" type ="button">
+              确定
+            </button>
+            <button id = "empty_button" type ="button">
+              重置
+            </button>
+          </p>
+          </div>
+      </div>
+      <div id = "tree">
+
+      </div>
+  </body>
+  <script>
+    document.getElementById("original_tree").value = "";
+    document.getElementById("confirm_button").addEventListener('click',produce);
+    document.getElementById("empty_button").addEventListener("click",empty);
+    var patt1 = /导师\：[\u4e00-\u9fa5]{2,5}/g;
+    var patt2 = /\d{4}级博士生\：.*/g;
+    var patt3 = /\d{4}级硕士生\：.*/g;
+    var patt4 = /\d{4}级本科生\：.*/g;
+    var patt5 = /\d{4}/;
+    var k=0;
+    function empty(){
+      document.getElementById("original_tree").value = "";
+    }
+    function analysis(content,num){
+      
+      var teacher = content.match(patt1);//提取出导师信息
+      if(teacher == null)
+      {
+        alert("您输入的格式不正确！");
+
+        return;
+      }
+      var t_div = document.createElement('div');
+      t_div.setAttribute("id","tree_"+k+num);
+      document.getElementById("tree").appendChild(t_div);
+      var r_tree = document.createElement('ul');
+      r_tree.setAttribute("id","root"+k+num);
+      document.getElementById("tree_"+k+num).appendChild(r_tree);
+      teacher = teacher.join("").split("：");
+      var ele = document.createElement('li');
+      ele.setAttribute("id","teacher"+k+num);//添加一个名为导师的结点
+      ele.innerHTML = teacher[1];//内容为导师姓名
+      document.getElementById("root"+k+num).appendChild(ele);
+      var doctor = content.match(patt2);
+      var master = content.match(patt3);
+      var undergraduate = content.match(patt4);
+      if(doctor!=null||master!=null||undergraduate!=null)
+      {
+        var degree = document.createElement("ul");
+        degree.setAttribute("id","degree"+k+num);
+        document.getElementById("teacher"+k+num).appendChild(degree);
+        
+      }
+      if(doctor!=null)
+      {
+        var doctor_degree = document.createElement("li");
+        doctor_degree.setAttribute("id","doctor_degree"+k+num);
+        doctor_degree.innerHTML = "博士生";
+        document.getElementById("degree"+k+num).appendChild(doctor_degree);
+        var doctor_grade = document.createElement("ul");
+        doctor_grade.setAttribute("id","doctor_grade"+k+num);
+        document.getElementById("doctor_degree"+k+num).appendChild(doctor_grade);
+        for(var i = 0;i < doctor.length;i++)
+        {
+          var str = doctor[i];
+          str = str.split("：");
+          var ele1 = document.createElement('li');
+          ele1.innerHTML = str[0].match(patt5);
+          ele1.setAttribute("id","grade"+k+num+i);
+          document.getElementById("doctor_grade"+k+num).appendChild(ele1);
+          var doctor_name = document.createElement("ul");
+          doctor_name.setAttribute("id","doctor_name"+k+num+i);
+          document.getElementById("grade"+k+num+i).appendChild(doctor_name);
+          var name = str[1].split("、");
+          for(var j = 0;j < name.length;j++)
+          {
+            var ele11 = document.createElement('li');
+           ele11.innerHTML = name[j];
+           ele11.setAttribute("id","name"+k+num+i+j);
+           document.getElementById("doctor_name"+k+num+i).appendChild(ele11);
+
+          }
+        }
+      }
+      if(master!=null)
+      {
+        var master_degree = document.createElement("li");
+        master_degree.setAttribute("id","master_degree"+k+num);
+        master_degree.innerHTML = "硕士生";
+        document.getElementById("degree"+k+num).appendChild(master_degree);
+        var master_grade = document.createElement("ul");
+        master_grade.setAttribute("id","master_grade"+k+num);
+        document.getElementById("master_degree"+k+num).appendChild(master_grade);
+        for(var i = 0;i < master.length;i++)
+        {
+          var str1 = master[i];
+          str1 = str1.split("：");
+          var ele2 = document.createElement('li');
+          ele2.innerHTML = str1[0].match(patt5);
+          ele2.setAttribute("id","grade1"+k+num+i);
+          document.getElementById("master_grade"+k+num).appendChild(ele2);
+          var master_name = document.createElement("ul");
+          master_name.setAttribute("id","master_name"+k+num+i);
+          document.getElementById("grade1"+k+num+i).appendChild(master_name);
+          var name = str1[1].split("、");
+          for(var j = 0;j < name.length;j++)
+          {
+            var ele22 = document.createElement('li');
+           ele22.innerHTML = name[j];
+           ele22.setAttribute("id","name1"+k+num+i+j);
+           document.getElementById("master_name"+k+num+i).appendChild(ele22);
+
+          }
+        }
+      }
+      if(undergraduate!=null)
+      {
+        var undergraduate_degree = document.createElement("li");
+        undergraduate_degree.setAttribute("id","undergraduate_degree"+k+num);
+        undergraduate_degree.innerHTML = "本科生";
+        document.getElementById("degree"+k+num).appendChild(undergraduate_degree);
+        var undergraduate_grade = document.createElement("ul");
+        undergraduate_grade.setAttribute("id","undergraduate_grade"+k+num);
+        document.getElementById("undergraduate_degree"+k+num).appendChild(undergraduate_grade);
+        for(var i = 0;i < undergraduate.length;i++)
+        {
+          var str2 = undergraduate[i];
+          str2 = str2.split("：");
+          var ele3 = document.createElement('li');
+          ele3.innerHTML = str2[0].match(patt5);
+          ele3.setAttribute("id","grade2"+k+num+i);
+          document.getElementById("undergraduate_grade"+k+num).appendChild(ele3);
+          var undergraduate_name = document.createElement("ul");
+          undergraduate_name.setAttribute("id","undergraduate_name"+k+num+i);
+          document.getElementById("grade2"+k+num+i).appendChild(undergraduate_name);
+          var name2 = str2[1].split("、");
+          for(var j = 0;j < name2.length;j++)
+          {
+            var ele33 = document.createElement('li');
+           ele33.innerHTML = name2[j];
+           ele33.setAttribute("id","name2"+k+num+i+j);
+           document.getElementById("undergraduate_name"+k+num+i).appendChild(ele33);
+
+          }
+        }
+      }
+      $(function(){$("#tree_"+k+num+"").jstree({
+        plugins : ["types"], 
+      "types": {
+          "default" : {
+            "icon" :false,  // 关闭默认图标
+          },
+      },
+      });});
+      k++;
+  }
+  function produce(){
+      var message = document.getElementById("original_tree").value;
+      var num = 0;
+      if(message == null)
+      {
+        alert("您输入的值为空！");
+      }
+      message = message.split("\n\n");
+      for(var i = 0;i < message.length;i++)
+      {
+        analysis(message[i],num);
+        num++;
+      }
+  }
+  </script>
+  
+</html>

@@ -1,0 +1,159 @@
+body {
+    margin: 0px;
+    display: flex;
+    flex-direction: row;
+    font-family: 微软雅黑;
+}
+
+
+#tree {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    width: 60%;
+    background-color: #e3e7f1;
+    padding: 50px 50px 50px 200px;
+}
+
+
+/* tree.css (6, 17) */
+#original_tree {
+    width: 380px;
+    height: 180px;
+    border-radius: 10px;
+    background-color: #ffffff;
+    padding: 15px;
+    border: 0px;
+    box-shadow: inset 0px 1px 1px rgba(0,0,0,0.075);
+    font-size: 15px;
+    font-family: 微软雅黑;
+    margin-top: 80px;
+    box-shadow: 0px 0px 10px 2px #494ca2;
+}
+
+
+/* tree.css (21, 2) */
+#original_tree:focus {
+    border-color: #ffffff;
+    box-shadow: inset 0px 0px 5px 2px #494ca2;
+}
+
+/* tree.css (26, 12) */
+#textarea {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    width: 500px;
+    text-align: center;
+    height: 400px;
+    background-color: #8186d5;
+    border-radius: 20px;
+    margin-top: 200px;
+    margin-left: 5%;
+    box-shadow: 0px 0px 10px 3px #c6cbef;
+}
+
+
+/* tree.css (54, 2) */
+#input {
+    width: 30%;
+    height: 800px;
+    text-align: center;
+    background-color: #494ca2;
+    min-height: 850px;
+}
+
+
+/* tree.css (61, 2) */
+#logo {
+    width: 15%;
+    position: absolute;
+    z-index: 1000;
+    left: 8%;
+    top: 150px;
+}
+
+/* tree.css (76, 2) */
+#confirm_button {
+    background: none;
+    border: 2px solid;
+    border-bottom-width: 4px;
+    font: inherit;
+    letter-spacing: inherit;
+    text-transform: inherit;
+    -webkit-transition: color 1s;
+    transition: color 1s;
+    color: #494ca2;
+    left: 11%;
+    position: absolute;
+    width: 35%;
+    height: 10%;
+    border-radius: 5px;
+}
+ 
+#confirm_button:hover 
+{
+    -webkit-animation: halftone 1s forwards;
+    animation: halftone 1s forwards;
+    background: -webkit-radial-gradient(circle, #9c89f7 0.2em, rgba(0, 0, 0, 0) 0.25em) 0 0/1.25em 1.25em,
+                -webkit-radial-gradient(circle, #9c89f7 0.2em, rgba(0, 0, 0, 0) 0.25em) 6.25em 6.25em/1.25em 1.25em;
+    background: radial-gradient(circle, #9c89f7 0.2em, rgba(0, 0, 0, 0) 0.25em) 0 0/1.25em 1.25em, 
+                radial-gradient(circle, #9c89f7 0.2em, rgba(0, 0, 0, 0) 0.25em) 6.25em 6.25em/1.25em 1.25em;
+    color: #e4f789;
+}
+
+#confirm_button:active
+{
+    box-shadow: inset 0px 0px 6px 1px;
+
+}
+@keyframes halftone {
+    100% {
+      background-size: 2.375em 2.375em, 0.1em 0.1em;
+    }
+}
+
+#empty_button
+{
+    background: none;
+    border: 2px solid;
+    border-bottom-width: 4px;
+    font: inherit;
+    letter-spacing: inherit;
+    text-transform: inherit;
+    -webkit-transition: color 1s;
+    transition: color 1s;
+    color: #494ca2;
+    left: 54%;
+    position: absolute;
+    width: 35%;
+    height: 10%;
+    border-radius: 5px;
+}
+
+#empty_button:hover 
+{
+    -webkit-animation: halftone 1s forwards;
+    animation: halftone 1s forwards;
+    background: -webkit-radial-gradient(circle, #9c89f7 0.2em, rgba(0, 0, 0, 0) 0.25em) 0 0/1.25em 1.25em,
+                -webkit-radial-gradient(circle, #9c89f7 0.2em, rgba(0, 0, 0, 0) 0.25em) 6.25em 6.25em/1.25em 1.25em;
+    background: radial-gradient(circle, #9c89f7 0.2em, rgba(0, 0, 0, 0) 0.25em) 0 0/1.25em 1.25em, 
+                radial-gradient(circle, #9c89f7 0.2em, rgba(0, 0, 0, 0) 0.25em) 6.25em 6.25em/1.25em 1.25em;
+    color: #e4f789;
+}
+
+#empty_button:active
+{
+    box-shadow: inset 0px 0px 6px 1px;
+
+}
+
+div[id^="tree_"]
+{
+    width: 20%;
+    background-color: rgba(255, 255, 255, 0.5);
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0px 0px 8px 2px #c6cbef;
+    margin-right: 60px;
+}
