@@ -1,0 +1,269 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>学术家族树</title>
+    <script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"> </script>
+    <script src="./vakata-jstree-c9d7c14/dist/jstree.min.js"></script>
+    <link href="tree.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="./vakata-jstree-c9d7c14/dist/themes/default/style.min.css"/>
+  </head>
+  <body>
+      <div id = "input">
+          <img  id = "logo" src = TREE.png alt = "标题">    
+          <div id = "textarea">
+          
+          <p>
+            <textarea id = "original_tree" placeholder="请输入一或多组学术家族树..."></textarea>
+          </p>
+          <p>
+            <button id = "confirm_button" type ="button">
+              确定
+            </button>
+            <button id = "empty_button" type ="button">
+              重置
+            </button>
+          </p>
+          </div>
+      </div>
+      <div id = "tree">
+        <!---
+          产生的数据格式如下：
+          <ul>
+            <li>张三
+              <ul>
+                <li>博士生
+                  <ul>
+                    <li>2016
+                      <ul>
+                        <li>
+                          王五
+                        </li>
+                        <li>
+                          李四
+                        </li>
+                      </ul>
+                    </li>
+                  </ul>
+                </li>
+              </ul>
+            </li>
+          </ul>
+        -->
+      </div>
+  </body>
+  <script>
+    document.getElementById("original_tree").value = "";
+    document.getElementById("confirm_button").addEventListener('click',produce);
+    document.getElementById("empty_button").addEventListener("click",empty);
+    //用正则表达式提取输入内容中的导师和不同届学生的信息
+    var patt1 = /导师\：[\u4e00-\u9fa5]{2,5}/g;
+    var patt2 = /\d{4}级博士生\：.*/g;
+    var patt3 = /\d{4}级硕士生\：.*/g;
+    var patt4 = /\d{4}级本科生\：.*/g;
+    var patt5 = /\d{4}/;
+    var k=0;//k值用来记录一共进行了几次输入
+    function empty(){
+      document.getElementById("original_tree").value = "";//清空输入框
+    }
+    function analysis(content,num){
+      
+      var teacher = content.match(patt1);//提取出导师信息
+      if(teacher == null)
+      {
+        alert("您输入的格式不正确！");//输入为空或输入无关信息或没有导师信息时，提示输入不正确
+
+        return;
+      }
+      var t_div = document.createElement('div');
+      t_div.setAttribute("id","tree_"+k+num);
+      document.getElementById("tree").appendChild(t_div);
+      var r_tree = document.createElement('ul');//创建根节点
+      r_tree.setAttribute("id","root"+k+num);
+      document.getElementById("tree_"+k+num).appendChild(r_tree);
+      teacher = teacher.join("").split("：");//所有的join和split操作均为了去除输入中的多余符号，提取所需信息，此处为获取导师名
+      var ele = document.createElement('li');
+      ele.setAttribute("id","teacher"+k+num);//添加一个名为导师的节点
+      ele.innerHTML = teacher[1];//内容为导师姓名
+      document.getElementById("root"+k+num).appendChild(ele);
+      var doctor = content.match(patt2);
+      var master = content.match(patt3);
+      var undergraduate = content.match(patt4);
+      //若该导师名下有至少一名学生，则创建代表学位的节点
+      if(doctor!=null||master!=null||undergraduate!=null)
+      {
+        var degree = document.createElement("ul");
+        degree.setAttribute("id","degree"+k+num);
+        document.getElementById("teacher"+k+num).appendChild(degree);
+        
+      }
+      //该导师有博士学生，则为该导师添加博士类节点，并按照入学年份对学生进行分类，以下的硕士类和本科生类相同
+      if(doctor!=null)
+      {
+        var doctor_degree = document.createElement("li");
+        doctor_degree.setAttribute("id","doctor_degree"+k+num);
+        doctor_degree.innerHTML = "博士生";
+        document.getElementById("degree"+k+num).appendChild(doctor_degree);
+        var doctor_grade = document.createElement("ul");
+        doctor_grade.setAttribute("id","doctor_grade"+k+num);
+        document.getElementById("doctor_degree"+k+num).appendChild(doctor_grade);
+        for(var i = 0;i < doctor.length;i++)
+        {
+          var str = doctor[i];
+          str = str.split("：");//将入学年份和学位和所有博士学生的姓名分离
+          var ele1 = document.createElement('li');
+          ele1.innerHTML = str[0].match(patt5);//得到入学年份
+          ele1.setAttribute("id","grade"+k+num+i);
+          document.getElementById("doctor_grade"+k+num).appendChild(ele1);
+          var doctor_name = document.createElement("ul");
+          doctor_name.setAttribute("id","doctor_name"+k+num+i);
+          document.getElementById("grade"+k+num+i).appendChild(doctor_name);
+          var name = str[1].split("、");//得到所有学生姓名
+          for(var j = 0;j < name.length;j++)
+          {
+            var ele11 = document.createElement('li');
+           ele11.innerHTML = name[j];
+           ele11.setAttribute("id","name"+k+num+i+j);
+           document.getElementById("doctor_name"+k+num+i).appendChild(ele11);
+
+          }
+        }
+      }
+      if(master!=null)
+      {
+        var master_degree = document.createElement("li");
+        master_degree.setAttribute("id","master_degree"+k+num);
+        master_degree.innerHTML = "硕士生";
+        document.getElementById("degree"+k+num).appendChild(master_degree);
+        var master_grade = document.createElement("ul");
+        master_grade.setAttribute("id","master_grade"+k+num);
+        document.getElementById("master_degree"+k+num).appendChild(master_grade);
+        for(var i = 0;i < master.length;i++)
+        {
+          var str1 = master[i];
+          str1 = str1.split("：");
+          var ele2 = document.createElement('li');
+          ele2.innerHTML = str1[0].match(patt5);
+          ele2.setAttribute("id","grade1"+k+num+i);
+          document.getElementById("master_grade"+k+num).appendChild(ele2);
+          var master_name = document.createElement("ul");
+          master_name.setAttribute("id","master_name"+k+num+i);
+          document.getElementById("grade1"+k+num+i).appendChild(master_name);
+          var name = str1[1].split("、");
+          for(var j = 0;j < name.length;j++)
+          {
+            var ele22 = document.createElement('li');
+           ele22.innerHTML = name[j];
+           ele22.setAttribute("id","name1"+k+num+i+j);
+           document.getElementById("master_name"+k+num+i).appendChild(ele22);
+
+          }
+        }
+      }
+      if(undergraduate!=null)
+      {
+        var undergraduate_degree = document.createElement("li");
+        undergraduate_degree.setAttribute("id","undergraduate_degree"+k+num);
+        undergraduate_degree.innerHTML = "本科生";
+        document.getElementById("degree"+k+num).appendChild(undergraduate_degree);
+        var undergraduate_grade = document.createElement("ul");
+        undergraduate_grade.setAttribute("id","undergraduate_grade"+k+num);
+        document.getElementById("undergraduate_degree"+k+num).appendChild(undergraduate_grade);
+        for(var i = 0;i < undergraduate.length;i++)
+        {
+          var str2 = undergraduate[i];
+          str2 = str2.split("：");
+          var ele3 = document.createElement('li');
+          ele3.innerHTML = str2[0].match(patt5);
+          ele3.setAttribute("id","grade2"+k+num+i);
+          document.getElementById("undergraduate_grade"+k+num).appendChild(ele3);
+          var undergraduate_name = document.createElement("ul");
+          undergraduate_name.setAttribute("id","undergraduate_name"+k+num+i);
+          document.getElementById("grade2"+k+num+i).appendChild(undergraduate_name);
+          var name2 = str2[1].split("、");
+          for(var j = 0;j < name2.length;j++)
+          {
+            var ele33 = document.createElement('li');
+           ele33.innerHTML = name2[j];
+           ele33.setAttribute("id","name2"+k+num+i+j);
+           document.getElementById("undergraduate_name"+k+num+i).appendChild(ele33);
+
+          }
+        }
+      }
+      $(function(){$("#tree_"+k+num+"").jstree({
+        plugins : ["types","contextmenu"], 
+        'core' : {
+                    //允许callback，为了后面进行创建、重命名、删除、移动或复制等操作
+                    "check_callback" : true,},
+      "types": {
+          "default" : {
+            "icon" :false,  // 关闭默认图标
+          },
+      },
+      'contextmenu':{
+                    'items' : {
+                        'add':{
+                            'label':'新增分类',
+                            'action':function(obj){
+                                //reference获取当前选中节点的引用
+                                var inst = jQuery.jstree.reference(obj.reference);
+                                //通过get_node方法获取节点的信息，类似于实例对象
+                                var clickedNode = inst.get_node(obj.reference);
+                                /*
+                                    inst.create_node 参数1:父节点  参数2:新节点的数据
+                                    参数3: 1）first：当前节点下的头部新增节点
+                                           2）last：当前节点下的尾部新增节点
+                                           3）before：当前节点同级的上部新增节点
+                                           4）after：当前节点同级的下部新增节点
+                                    参数4:回调函数
+                                    参数5:Boolean类型,内部参数，指示父节点是否成功加载
+                                */  
+                                var newNode = inst.create_node(clickedNode,
+                                    {    //'id': 'ajson20',
+                                        //'parent' : 'ajson2',
+                                        'icon' : 'jstree-file',
+                                        'text':'新节点'},'last',function(node){
+                                        //回调返回创建后点节点，给新节点改名
+                                        inst.edit(node,node.val);
+                                    },'');
+                            }
+                        },
+                        'rename':{
+                            'label':'修改分类',
+                            'action':function(obj){
+                                var inst = jQuery.jstree.reference(obj.reference);
+                                var clickedNode = inst.get_node(obj.reference);    
+                                inst.edit(obj.reference,clickedNode.val);
+                            }
+                        },
+                        'delete':{
+                            "label": "删除分类",
+                            'action':function(obj){
+                                var inst = jQuery.jstree.reference(obj.reference);
+                                var clickedNode = inst.get_node(obj.reference);
+                                inst.delete_node(obj.reference);
+                            }
+                        }
+                    }
+                }
+      });});
+      k++;
+  }
+  function produce(){
+      var message = document.getElementById("original_tree").value;
+      var num = 0;//一次输入数据的组数-1，初始值为零
+      if(message == null)
+      {
+        alert("您输入的值为空！");
+      }
+      message = message.split("\n\n");//通过空格分离不同的组
+      for(var i = 0;i < message.length;i++)
+      {
+        analysis(message[i],num);
+        num++;
+      }
+  }
+  </script>
+  
+</html>
