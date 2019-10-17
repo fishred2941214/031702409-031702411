@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <!-- jstree css样式 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/themes/default/style.min.css" />
+</head>
+<body>
+    <!-- 设置容器元素 -->
+    <div id="jstree"></div>
+    <!-- jquery.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.12.1/jquery.min.js"></script>
+    <!-- jstree js核心文件 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/jstree.min.js"></script>
+    <script type="text/javascript">
+        $(function(){ 
+            //当DOM准备好时创建一个jstree实例
+            $('#jstree').jstree({
+                //core 存储核心的所有默认值
+                'core' : {
+                    //如果保留为false，则防止创建、重命名、删除、移动或复制等操作
+                    "check_callback" : true,
+                    //data 数据配置:在这里可以传递HTML字符串或JSON数组
+                    'data' : [
+                        {
+                            'id' : 'ajson1',
+                            'parent' : '#',//  #  根目录
+                            'icon' : 'jstree-folder',//jstree-folder 文件夹图标(默认图标)
+                            'text':'部门',
+                            "state" :{
+                                "opened" : true //默认打开文件夹
+                            }
+                        },
+                        {
+                            'id': 'ajson2',
+                            'parent' : 'ajson1',
+                            'text':'纪检部'
+                        },
+                        {
+                            'id': 'ajson3',
+                            'parent' : 'ajson1',
+                            'text':'卫生部'
+                        },
+                        {
+                            'id': 'ajson4',
+                            'parent' : 'ajson1',
+                            'text':'公寓部'
+                        },
+                        {
+                            'id': 'ajson5',
+                            'parent' : 'ajson1',
+                            'text':'女生部'
+                        },
+                        {
+                            'id': 'ajson6',
+                            'parent' : 'ajson2',
+                            'icon' : 'jstree-file',//jstree-file 文件图标
+                            'text':'张三'
+                        },
+                        {
+                            'id': 'ajson7',
+                            'parent' : 'ajson2',
+                            'icon' : 'jstree-file',
+                            'text':'李四'
+                        },
+                        {
+                            'id': 'ajson8',
+                            'parent' : 'ajson2',
+                            'icon' : 'jstree-file',
+                            'text':'王五'
+                        }
+                    ]
+                },
+                // plugins  存储所有已加载的jstree插件
+                'plugins' : [
+                        'contextmenu'
+                ],
+                //contextmenu 存储contextmenu插件的所有默认值
+                'contextmenu':{
+                    'items' : {
+                        'add':{
+                            'label':'新增分类',
+                            'action':function(obj){
+                                //reference获取当前选中节点的引用
+                                var inst = jQuery.jstree.reference(obj.reference);
+                                //通过get_node方法获取节点的信息，类似于实例对象
+                                var clickedNode = inst.get_node(obj.reference);
+                                /*
+                                    inst.create_node 参数1:父节点  参数2:新节点的数据
+                                    参数3: 1）first：当前节点下的头部新增节点
+                                           2）last：当前节点下的尾部新增节点
+                                           3）before：当前节点同级的上部新增节点
+                                           4）after：当前节点同级的下部新增节点
+                                    参数4:回调函数
+                                    参数5:Boolean类型,内部参数，指示父节点是否成功加载
+                                */  
+                                var newNode = inst.create_node(clickedNode,
+                                    {    //'id': 'ajson20',
+                                        //'parent' : 'ajson2',
+                                        'icon' : 'jstree-file',
+                                        'text':'新节点'},'last',function(node){
+                                        //回调返回创建后点节点，给新节点改名
+                                        inst.edit(node,node.val);
+                                    },'');
+                            }
+                        },
+                        'rename':{
+                            'label':'修改分类',
+                            'action':function(obj){
+                                var inst = jQuery.jstree.reference(obj.reference);
+                                var clickedNode = inst.get_node(obj.reference);    
+                                inst.edit(obj.reference,clickedNode.val);
+                            }
+                        },
+                        'delete':{
+                            "label": "删除分类",
+                            'action':function(obj){
+                                var inst = jQuery.jstree.reference(obj.reference);
+                                var clickedNode = inst.get_node(obj.reference);
+                                inst.delete_node(obj.reference);
+                            }
+                        }
+                    }
+                }
+            }); 
+        });
+    </script>
+</body>
+</html>
